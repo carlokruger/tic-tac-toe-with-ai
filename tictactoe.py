@@ -15,7 +15,8 @@ row_2 = []
 row_3 = []
 init_matrix = "_________"
 current_state = ""
-current_player = "X"
+current_player = ""
+
 
 num_matrix = [[0, 0], [0, 1], [0, 2], [1, 0], [1, 1], [1, 2], [2, 0], [2, 1], [2, 2]]
 
@@ -26,11 +27,20 @@ def create_init_state():
     global row_1
     global row_2
     global row_3
+    global current_player
 
-    #  init_matrix = input("Enter cells: ")
+    init_matrix = input("Enter cells: ")
     row_1 = [init_matrix[0], init_matrix[1], init_matrix[2]]
     row_2 = [init_matrix[3], init_matrix[4], init_matrix[5]]
     row_3 = [init_matrix[6], init_matrix[7], init_matrix[8]]
+
+    countx = init_matrix.count("X")
+    counto = init_matrix.count("O")
+
+    if countx == counto:
+        current_player = "X"
+    elif counto < countx:
+        current_player = "O"
 
 
 def create_rows():
@@ -189,6 +199,9 @@ while True:
                 print(current_state)
                 break
             elif "Impossible" in check_game_state():
+                print(current_state)
+                break
+            elif "not finished" in check_game_state():
                 print(current_state)
                 break
 
