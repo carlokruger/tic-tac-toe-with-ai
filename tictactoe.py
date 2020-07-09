@@ -1,4 +1,6 @@
 # write your code here
+import random
+
 rows = list()
 columns = []
 diags = []
@@ -15,7 +17,8 @@ row_2 = []
 row_3 = []
 init_matrix = "_________"
 current_state = ""
-current_player = ""
+current_player = "X"
+loop = True
 
 
 num_matrix = [[0, 0], [0, 1], [0, 2], [1, 0], [1, 1], [1, 2], [2, 0], [2, 1], [2, 2]]
@@ -29,18 +32,10 @@ def create_init_state():
     global row_3
     global current_player
 
-    init_matrix = input("Enter cells: ")
+    # init_matrix = input("Enter cells: ")
     row_1 = [init_matrix[0], init_matrix[1], init_matrix[2]]
     row_2 = [init_matrix[3], init_matrix[4], init_matrix[5]]
     row_3 = [init_matrix[6], init_matrix[7], init_matrix[8]]
-
-    countx = init_matrix.count("X")
-    counto = init_matrix.count("O")
-
-    if countx == counto:
-        current_player = "X"
-    elif counto < countx:
-        current_player = "O"
 
 
 def create_rows():
@@ -168,7 +163,7 @@ create_diags()
 create_gameboard()
 
 # Take in new X
-while True:
+while loop:
     text_in = input("Enter the coordinates: ")
     if not is_two_digits(text_in):
         print("You should enter numbers!")
@@ -201,9 +196,41 @@ while True:
             elif "Impossible" in check_game_state():
                 print(current_state)
                 break
-            elif "not finished" in check_game_state():
-                print(current_state)
-                break
+
+            # calculate O moves
+            print('Making move level "easy"')
+            if current_player == "X":
+                current_player = "O"
+            else:
+                current_player = "X"
+
+            while True:
+                ox = random.randint(1, 3)
+                oy = random.randint(1, 3)
+                cello = (ox - 1) + (9 - (3 * oy))
+                new_xy = num_matrix[cello]
+                new_x = int(new_xy[0])
+                new_y = int(new_xy[1])
+                if rows[new_x][new_y] != "_":
+                    pass
+                elif rows[new_x][new_y] == "_":
+                    rows[new_x][new_y] = current_player
+                    create_columns()
+                    create_diags()
+                    create_gameboard()
+                    print_gameboard()
+                    count_winners()
+
+                if "win" in check_game_state() or "Draw" in check_game_state():
+                    print(current_state)
+                    loop = False
+                    break
+                elif "Impossible" in check_game_state():
+                    print(current_state)
+                    loop = False
+                    break
+                elif "Game not finished" == check_game_state():
+                    break
 
             if current_player == "X":
                 current_player = "O"
