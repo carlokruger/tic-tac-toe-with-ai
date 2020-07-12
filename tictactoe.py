@@ -19,6 +19,7 @@ init_matrix = "_________"
 current_state = ""
 current_player = "X"
 loop = True
+menu_loop = True
 
 
 num_matrix = [[0, 0], [0, 1], [0, 2], [1, 0], [1, 1], [1, 2], [2, 0], [2, 1], [2, 2]]
@@ -152,87 +153,124 @@ def is_in_coords(some_text):
         return False
 
 
-# Deal with initial setup
-create_init_state()
-create_rows()
-print_gameboard()
+def initial_setup():
+    create_init_state()
+    create_rows()
 
-# setup game board
-create_columns()
-create_diags()
-create_gameboard()
 
-# Take in new X
-while loop:
-    text_in = input("Enter the coordinates: ")
-    if not is_two_digits(text_in):
-        print("You should enter numbers!")
 
-    elif not is_in_coords(text_in):
-        print("Coordinates should be from 1 to 3!")
+def setup_game():
+    create_columns()
+    create_diags()
+    create_gameboard()
 
-    elif is_two_digits(text_in) and is_in_coords(text_in):
-        x, y = text_in.split()
-        x = int(x)
-        y = int(y)
-        cell = (x - 1) + (9 - (3 * y))
-        new_xy = num_matrix[cell]
-        new_x = int(new_xy[0])
-        new_y = int(new_xy[1])
 
-        if rows[new_x][new_y] != "_":
-            print("This cell is occupied! Choose another one!")
-        elif rows[new_x][new_y] == "_":
-            rows[new_x][new_y] = current_player
-            create_columns()
-            create_diags()
-            create_gameboard()
+while menu_loop:
+    initial_setup()
+    setup_game()
+
+    print("Input command:")
+    commands = input().split()
+    # print_gameboard()
+    if commands[0] == "exit" and len(commands) == 1:
+        break
+    elif commands[0] == "start" and len(commands) != 3:
+        print("Bad parameters")
+    elif commands[0] != "start" and commands[0] != "exit":
+        print("Bad parameters")
+    elif commands[0] == "start" and len(commands) == 3:
+        if commands[1] == "user" and commands[2] == "easy":
+            # simple game starting with user first
             print_gameboard()
-            count_winners()
+            pass
+        elif commands[1] == "user" and commands[2] == "user":
+            # simple game with two users
+            print_gameboard()
+            pass
+        elif commands[1] == "easy" and commands[2] == "user":
+            # simple game starting with AI first
+            print_gameboard()
+            pass
+        elif commands[1] == "easy" and commands[2] == "easy":
+            # easy game with two AI's
+            print_gameboard()
+            pass
 
-            if "win" in check_game_state() or "Draw" in check_game_state():
-                print(current_state)
-                break
-            elif "Impossible" in check_game_state():
-                print(current_state)
-                break
 
-            # calculate O moves
-            print('Making move level "easy"')
-            if current_player == "X":
-                current_player = "O"
-            else:
-                current_player = "X"
 
-            while True:
-                ox = random.randint(1, 3)
-                oy = random.randint(1, 3)
-                cello = (ox - 1) + (9 - (3 * oy))
-                new_xy = num_matrix[cello]
-                new_x = int(new_xy[0])
-                new_y = int(new_xy[1])
-                if rows[new_x][new_y] != "_":
-                    pass
-                elif rows[new_x][new_y] == "_":
-                    rows[new_x][new_y] = current_player
-                    create_columns()
-                    create_diags()
-                    create_gameboard()
-                    print_gameboard()
-                    count_winners()
+    # Take in new X
+    while loop:
+        text_in = input("Enter the coordinates: ")
+        if not is_two_digits(text_in):
+            print("You should enter numbers!")
+
+        elif not is_in_coords(text_in):
+            print("Coordinates should be from 1 to 3!")
+
+        elif is_two_digits(text_in) and is_in_coords(text_in):
+            x, y = text_in.split()
+            x = int(x)
+            y = int(y)
+            cell = (x - 1) + (9 - (3 * y))
+            new_xy = num_matrix[cell]
+            new_x = int(new_xy[0])
+            new_y = int(new_xy[1])
+
+            if rows[new_x][new_y] != "_":
+                print("This cell is occupied! Choose another one!")
+            elif rows[new_x][new_y] == "_":
+                rows[new_x][new_y] = current_player
+                create_columns()
+                create_diags()
+                create_gameboard()
+                print_gameboard()
+                count_winners()
 
                 if "win" in check_game_state() or "Draw" in check_game_state():
                     print(current_state)
-                    loop = False
+                    menu_loop = False
                     break
                 elif "Impossible" in check_game_state():
+                    menu_loop = False
                     print(current_state)
-                    loop = False
-                    break
-                elif "Game not finished" == check_game_state():
                     break
 
-            if current_player == "X":
-                current_player = "O"
-            else:
-                current_player = "X"
+                # calculate O moves
+                print('Making move level "easy"')
+                if current_player == "X":
+                    current_player = "O"
+                else:
+                    current_player = "X"
+
+                while True:
+                    ox = random.randint(1, 3)
+                    oy = random.randint(1, 3)
+                    cello = (ox - 1) + (9 - (3 * oy))
+                    new_xy = num_matrix[cello]
+                    new_x = int(new_xy[0])
+                    new_y = int(new_xy[1])
+                    if rows[new_x][new_y] != "_":
+                        pass
+                    elif rows[new_x][new_y] == "_":
+                        rows[new_x][new_y] = current_player
+                        create_columns()
+                        create_diags()
+                        create_gameboard()
+                        print_gameboard()
+                        count_winners()
+
+                    if "win" in check_game_state() or "Draw" in check_game_state():
+                        print(current_state)
+                        loop = False
+                        break
+                    elif "Impossible" in check_game_state():
+                        print(current_state)
+                        loop = False
+                        break
+                    elif "Game not finished" == check_game_state():
+                        break
+
+                if current_player == "X":
+                    current_player = "O"
+                else:
+                    current_player = "X"
