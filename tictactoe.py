@@ -18,8 +18,13 @@ row_3 = []
 init_matrix = "_________"
 current_state = ""
 current_player = "X"
-loop = True
+game_loop = True
 menu_loop = True
+ai_loop = True
+move_loop = True
+new_x = 0
+new_y = 0
+text_in = ""
 
 
 num_matrix = [[0, 0], [0, 1], [0, 2], [1, 0], [1, 1], [1, 2], [2, 0], [2, 1], [2, 2]]
@@ -158,11 +163,88 @@ def initial_setup():
     create_rows()
 
 
-
 def setup_game():
     create_columns()
     create_diags()
     create_gameboard()
+
+
+def get_coords(text):
+    global new_x
+    global new_y
+    global num_matrix
+    x, y = text.split()
+    x = int(x)
+    y = int(y)
+    cell = (x - 1) + (9 - (3 * y))
+    new_xy = num_matrix[cell]
+    new_x = int(new_xy[0])
+    new_y = int(new_xy[1])
+
+
+def end_game():
+    global menu_loop
+    global game_loop
+    if check_game_state() in ("X wins", "O wins", "Impossible", "Draw"):
+        print(current_state)
+        game_loop = False
+        menu_loop = False
+
+
+def switch_player():
+    global current_player
+
+    if current_player == "X":
+        current_player = "O"
+    else:
+        current_player = "X"
+
+
+def get_user_move():
+    global text_in
+    while True:
+        text_in = input("Enter the coordinates: ")
+
+        if not is_two_digits(text_in):
+            print("You should enter numbers!")
+
+        elif not is_in_coords(text_in):
+            print("Coordinates should be from 1 to 3!")
+
+        elif is_two_digits(text_in) and is_in_coords(text_in):
+            get_coords(text_in)
+            break
+
+
+def play_move():
+    global new_x
+    global new_y
+    global move_loop
+    global game_loop
+    global menu_loop
+
+    if rows[new_x][new_y] != "_":
+        print("This cell is occupied! Choose another one!")
+    elif rows[new_x][new_y] == "_":
+        rows[new_x][new_y] = current_player
+        setup_game()
+        print_gameboard()
+        count_winners()
+        end_game()
+        move_loop = False
+
+
+def generate_ai_move():
+    global num_matrix
+    global new_x
+    global new_y
+    print('Making move level "easy"')
+    ox = random.randint(1, 3)
+    oy = random.randint(1, 3)
+    cello = (ox - 1) + (9 - (3 * oy))
+    new_xy = num_matrix[cello]
+    new_x = int(new_xy[0])
+    new_y = int(new_xy[1])
 
 
 while menu_loop:
@@ -173,7 +255,7 @@ while menu_loop:
     commands = input().split()
     # print_gameboard()
     if commands[0] == "exit" and len(commands) == 1:
-        break
+        menu_loop = False
     elif commands[0] == "start" and len(commands) != 3:
         print("Bad parameters")
     elif commands[0] != "start" and commands[0] != "exit":
@@ -182,95 +264,94 @@ while menu_loop:
         if commands[1] == "user" and commands[2] == "easy":
             # simple game starting with user first
             print_gameboard()
-            pass
+            while game_loop:
+                while move_loop:
+                    get_user_move()
+                    play_move()
+                    if not move_loop:
+                        switch_player()
+                        move_loop = True
+                        break
+                if not game_loop:
+                    break
+
+                while move_loop:
+                    generate_ai_move()
+                    play_move()
+                    if not move_loop:
+                        switch_player()
+                        move_loop = True
+                        break
+                if not game_loop:
+                    break
+
         elif commands[1] == "user" and commands[2] == "user":
             # simple game with two users
             print_gameboard()
-            pass
+            while game_loop:
+                while move_loop:
+                    get_user_move()
+                    play_move()
+                    if not move_loop:
+                        switch_player()
+                        break
+                if not game_loop:
+                    break
+                move_loop = True
+
+                while move_loop:
+                    get_user_move()
+                    play_move()
+                    if not move_loop:
+                        switch_player()
+                        break
+                move_loop = True
+                if not game_loop:
+                    break
+
         elif commands[1] == "easy" and commands[2] == "user":
             # simple game starting with AI first
             print_gameboard()
-            pass
+            while game_loop:
+                while move_loop:
+                    generate_ai_move()
+                    play_move()
+                    if not move_loop:
+                        switch_player()
+                        move_loop = True
+                        break
+                if not game_loop:
+                    break
+
+                while move_loop:
+                    get_user_move()
+                    play_move()
+                    if not move_loop:
+                        switch_player()
+                        move_loop = True
+                        break
+                if not game_loop:
+                    break
         elif commands[1] == "easy" and commands[2] == "easy":
             # easy game with two AI's
             print_gameboard()
-            pass
-
-
-
-    # Take in new X
-    while loop:
-        text_in = input("Enter the coordinates: ")
-        if not is_two_digits(text_in):
-            print("You should enter numbers!")
-
-        elif not is_in_coords(text_in):
-            print("Coordinates should be from 1 to 3!")
-
-        elif is_two_digits(text_in) and is_in_coords(text_in):
-            x, y = text_in.split()
-            x = int(x)
-            y = int(y)
-            cell = (x - 1) + (9 - (3 * y))
-            new_xy = num_matrix[cell]
-            new_x = int(new_xy[0])
-            new_y = int(new_xy[1])
-
-            if rows[new_x][new_y] != "_":
-                print("This cell is occupied! Choose another one!")
-            elif rows[new_x][new_y] == "_":
-                rows[new_x][new_y] = current_player
-                create_columns()
-                create_diags()
-                create_gameboard()
-                print_gameboard()
-                count_winners()
-
-                if "win" in check_game_state() or "Draw" in check_game_state():
-                    print(current_state)
-                    menu_loop = False
-                    break
-                elif "Impossible" in check_game_state():
-                    menu_loop = False
-                    print(current_state)
+            while game_loop:
+                while move_loop:
+                    generate_ai_move()
+                    play_move()
+                    if not move_loop:
+                        switch_player()
+                        move_loop = True
+                        break
+                if not game_loop:
                     break
 
-                # calculate O moves
-                print('Making move level "easy"')
-                if current_player == "X":
-                    current_player = "O"
-                else:
-                    current_player = "X"
-
-                while True:
-                    ox = random.randint(1, 3)
-                    oy = random.randint(1, 3)
-                    cello = (ox - 1) + (9 - (3 * oy))
-                    new_xy = num_matrix[cello]
-                    new_x = int(new_xy[0])
-                    new_y = int(new_xy[1])
-                    if rows[new_x][new_y] != "_":
-                        pass
-                    elif rows[new_x][new_y] == "_":
-                        rows[new_x][new_y] = current_player
-                        create_columns()
-                        create_diags()
-                        create_gameboard()
-                        print_gameboard()
-                        count_winners()
-
-                    if "win" in check_game_state() or "Draw" in check_game_state():
-                        print(current_state)
-                        loop = False
+                while move_loop:
+                    generate_ai_move()
+                    play_move()
+                    if not move_loop:
+                        switch_player()
+                        move_loop = True
                         break
-                    elif "Impossible" in check_game_state():
-                        print(current_state)
-                        loop = False
-                        break
-                    elif "Game not finished" == check_game_state():
-                        break
-
-                if current_player == "X":
-                    current_player = "O"
-                else:
-                    current_player = "X"
+                if not game_loop:
+                    break
