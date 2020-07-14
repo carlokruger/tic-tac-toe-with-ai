@@ -234,17 +234,145 @@ def play_move():
         move_loop = False
 
 
-def generate_ai_move():
+def generate_random_move():
     global num_matrix
     global new_x
     global new_y
-    print('Making move level "easy"')
+
     ox = random.randint(1, 3)
     oy = random.randint(1, 3)
     cello = (ox - 1) + (9 - (3 * oy))
     new_xy = num_matrix[cello]
     new_x = int(new_xy[0])
     new_y = int(new_xy[1])
+
+
+def find_end(player):
+    global rows
+    global columns
+    global diags
+    global new_x
+    global new_y
+    row = ""
+    column = ""
+    diag = ""
+    new_x = ""
+    new_y = ""
+    print("finding end")
+
+    search1 = [player, player, "_"]
+    if search1 in rows:
+        row = rows.index(search1)
+        if row == 0:
+            new_x = 2
+            new_y = 2
+        elif row == 1:
+            new_x = 2
+            new_y = 1
+        elif row == 2:
+            new_x = 2
+            new_y = 0
+    elif search1 in columns:
+        column = columns.index(search1)
+        if column == 0:
+            new_x = 0
+            new_y = 0
+        elif column == 1:
+            new_x = 1
+            new_y = 0
+        elif column == 2:
+            new_x = 2
+            new_y = 0
+    elif search1 in diags:
+        diag = diags.index(search1)
+        if diag == 0:
+            new_x = 2
+            new_y = 0
+        elif diag == 1:
+            new_x = 2
+            new_y = 2
+
+    search2 = [player, "_", player]
+    if search2 in rows:
+        row = rows.index(search2)
+        if row == 0:
+            new_x = 1
+            new_y = 2
+        elif row == 1:
+            new_x = 1
+            new_y = 1
+        elif row == 2:
+            new_x = 1
+            new_y = 0
+    elif search2 in columns:
+        column = columns.index(search2)
+        if column == 0:
+            new_x = 0
+            new_y = 1
+        elif column == 1:
+            new_x = 1
+            new_y = 1
+        elif column == 2:
+            new_x = 2
+            new_y = 1
+    elif search2 in diags:
+        diag = diags.index(search2)
+        if diag == 0:
+            new_x = 1
+            new_y = 1
+        elif diag == 1:
+            new_x = 1
+            new_y = 1
+
+    search3 = ["_", player, player]
+    if search3 in rows:
+        row = rows.index(search3)
+        if row == 0:
+            new_x = 0
+            new_y = 2
+        elif row == 1:
+            new_x = 0
+            new_y = 1
+        elif row == 2:
+            new_x = 0
+            new_y = 0
+    elif search3 in columns:
+        column = columns.index(search3)
+        if column == 0:
+            new_x = 0
+            new_y = 2
+        elif column == 1:
+            new_x = 1
+            new_y = 2
+        elif column == 2:
+            new_x = 2
+            new_y = 2
+    elif search3 in diags:
+        diag = diags.index(search3)
+        if diag == 0:
+            new_x = 0
+            new_y = 2
+        elif diag == 1:
+            new_x = 0
+            new_y = 0
+
+    print("X", new_x)
+    print("Y", new_y)
+    if new_x == "":
+        return False
+    else:
+        return True
+
+def end_game():
+    pass
+
+
+def find_blocker():
+    pass
+
+
+def generate_blocking_move():
+    pass
 
 
 while menu_loop:
@@ -276,8 +404,45 @@ while menu_loop:
                     break
 
                 while move_loop:
-                    generate_ai_move()
+                    print('Making move level "easy"')
+                    generate_random_move()
                     play_move()
+                    if not move_loop:
+                        switch_player()
+                        move_loop = True
+                        break
+                if not game_loop:
+                    break
+        elif commands[1] == "user" and commands[2] == "medium":
+            # simple game starting with user first
+            print_gameboard()
+            while game_loop:
+                while move_loop:
+                    get_user_move()
+                    play_move()
+                    if not move_loop:
+                        switch_player()
+                        move_loop = True
+                        break
+                if not game_loop:
+                    break
+
+                while move_loop:
+                    print(rows)
+                    print(columns)
+                    print(diags)
+                    play_move()
+                    if find_end(current_player):
+                        print("end game")
+
+                    elif find_blocker():
+                        print("find blocker")
+                        play_move()
+                    else:
+                        print("random move")
+                        generate_random_move()
+                        play_move()
+
                     if not move_loop:
                         switch_player()
                         move_loop = True
@@ -314,7 +479,8 @@ while menu_loop:
             print_gameboard()
             while game_loop:
                 while move_loop:
-                    generate_ai_move()
+                    print('Making move level "easy"')
+                    generate_random_move()
                     play_move()
                     if not move_loop:
                         switch_player()
@@ -337,7 +503,8 @@ while menu_loop:
             print_gameboard()
             while game_loop:
                 while move_loop:
-                    generate_ai_move()
+                    print('Making move level "easy"')
+                    generate_random_move()
                     play_move()
                     if not move_loop:
                         switch_player()
@@ -347,7 +514,8 @@ while menu_loop:
                     break
 
                 while move_loop:
-                    generate_ai_move()
+                    print('Making move level "easy"')
+                    generate_random_move()
                     play_move()
                     if not move_loop:
                         switch_player()
