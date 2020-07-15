@@ -219,6 +219,9 @@ def get_user_move():
 def play_move():
     global new_x
     global new_y
+    global row_1
+    global row_2
+    global row_3
     global move_loop
     global game_loop
     global menu_loop
@@ -227,6 +230,9 @@ def play_move():
         print("This cell is occupied! Choose another one!")
     elif rows[new_x][new_y] == "_":
         rows[new_x][new_y] = current_player
+        row_1 = rows[0]
+        row_2 = rows[1]
+        row_3 = rows[2]
         setup_game()
         print_gameboard()
         count_winners()
@@ -251,128 +257,182 @@ def find_end(player):
     global rows
     global columns
     global diags
-    global new_x
-    global new_y
+
     row = ""
     column = ""
     diag = ""
-    new_x = ""
-    new_y = ""
-    print("finding end")
+    coords = ""
 
     search1 = [player, player, "_"]
     if search1 in rows:
         row = rows.index(search1)
         if row == 0:
-            new_x = 2
-            new_y = 2
+            coords = "3 3"
         elif row == 1:
-            new_x = 2
-            new_y = 1
+            coords = "3 2"
         elif row == 2:
-            new_x = 2
-            new_y = 0
+            coords = "3 1"
     elif search1 in columns:
         column = columns.index(search1)
         if column == 0:
-            new_x = 0
-            new_y = 0
+            coords = "1 1"
         elif column == 1:
-            new_x = 1
-            new_y = 0
+            coords = "2 1"
         elif column == 2:
-            new_x = 2
-            new_y = 0
+            coords = "3 1"
     elif search1 in diags:
         diag = diags.index(search1)
         if diag == 0:
-            new_x = 2
-            new_y = 0
+            coords = "3 1"
         elif diag == 1:
-            new_x = 2
-            new_y = 2
+            coords = "3 3"
 
     search2 = [player, "_", player]
     if search2 in rows:
         row = rows.index(search2)
         if row == 0:
-            new_x = 1
-            new_y = 2
+            coords = "2 3"
         elif row == 1:
-            new_x = 1
-            new_y = 1
+            coords = "2 2"
         elif row == 2:
-            new_x = 1
-            new_y = 0
+            coords = "2 1"
     elif search2 in columns:
         column = columns.index(search2)
         if column == 0:
-            new_x = 0
-            new_y = 1
+            coords = "1 2"
         elif column == 1:
-            new_x = 1
-            new_y = 1
+            coords = "2 2"
         elif column == 2:
-            new_x = 2
-            new_y = 1
+            coords = "3 2"
     elif search2 in diags:
         diag = diags.index(search2)
         if diag == 0:
-            new_x = 1
-            new_y = 1
+            coords = "2 2"
         elif diag == 1:
-            new_x = 1
-            new_y = 1
+            coords = "2 2"
 
     search3 = ["_", player, player]
     if search3 in rows:
         row = rows.index(search3)
         if row == 0:
-            new_x = 0
-            new_y = 2
+            coords = "1 3"
         elif row == 1:
-            new_x = 0
-            new_y = 1
+            coords = "1 2"
         elif row == 2:
-            new_x = 0
-            new_y = 0
+            coords = "1 1"
     elif search3 in columns:
         column = columns.index(search3)
         if column == 0:
-            new_x = 0
-            new_y = 2
+            coords = "1 3"
         elif column == 1:
-            new_x = 1
-            new_y = 2
+            coords = "2 3"
         elif column == 2:
-            new_x = 2
-            new_y = 2
+            coords = "3 3"
     elif search3 in diags:
         diag = diags.index(search3)
         if diag == 0:
-            new_x = 0
-            new_y = 2
+            coords = "1 3"
         elif diag == 1:
-            new_x = 0
-            new_y = 0
+            coords = "1 1"
 
-    print("X", new_x)
-    print("Y", new_y)
-    if new_x == "":
+
+    if coords == "":
         return False
     else:
+        get_coords(coords)
         return True
 
-def end_game():
-    pass
 
+def find_blocker(player):
+    global rows
+    global columns
+    global diags
 
-def find_blocker():
-    pass
+    row = ""
+    column = ""
+    diag = ""
+    coords = ""
+    if player == "X":
+        opponent = "O"
+    else:
+        opponent = "X"
+    search1 = [opponent, opponent, "_"]
+    if search1 in rows:
+        row = rows.index(search1)
+        if row == 0:
+            coords = "3 3"
+        elif row == 1:
+            coords = "3 2"
+        elif row == 2:
+            coords = "3 1"
+    elif search1 in columns:
+        column = columns.index(search1)
+        if column == 0:
+            coords = "1 1"
+        elif column == 1:
+            coords = "2 1"
+        elif column == 2:
+            coords = "3 1"
+    elif search1 in diags:
+        diag = diags.index(search1)
+        if diag == 0:
+            coords = "3 1"
+        elif diag == 1:
+            coords = "3 3"
 
+    search2 = [opponent, "_", opponent]
+    if search2 in rows:
+        row = rows.index(search2)
+        if row == 0:
+            coords = "2 3"
+        elif row == 1:
+            coords = "2 2"
+        elif row == 2:
+            coords = "2 1"
+    elif search2 in columns:
+        column = columns.index(search2)
+        if column == 0:
+            coords = "1 2"
+        elif column == 1:
+            coords = "2 2"
+        elif column == 2:
+            coords = "3 2"
+    elif search2 in diags:
+        diag = diags.index(search2)
+        if diag == 0:
+            coords = "2 2"
+        elif diag == 1:
+            coords = "2 2"
 
-def generate_blocking_move():
-    pass
+    search3 = ["_", opponent, opponent]
+    if search3 in rows:
+        row = rows.index(search3)
+        if row == 0:
+            coords = "1 3"
+        elif row == 1:
+            coords = "1 2"
+        elif row == 2:
+            coords = "1 1"
+    elif search3 in columns:
+        column = columns.index(search3)
+        if column == 0:
+            coords = "1 3"
+        elif column == 1:
+            coords = "2 3"
+        elif column == 2:
+            coords = "3 3"
+    elif search3 in diags:
+        diag = diags.index(search3)
+        if diag == 0:
+            coords = "1 3"
+        elif diag == 1:
+            coords = "1 1"
+
+    if coords == "":
+        return False
+    else:
+        get_coords(coords)
+        return True
 
 
 while menu_loop:
@@ -381,7 +441,6 @@ while menu_loop:
 
     print("Input command:")
     commands = input().split()
-    # print_gameboard()
     if commands[0] == "exit" and len(commands) == 1:
         menu_loop = False
     elif commands[0] == "start" and len(commands) != 3:
@@ -414,7 +473,7 @@ while menu_loop:
                 if not game_loop:
                     break
         elif commands[1] == "user" and commands[2] == "medium":
-            # simple game starting with user first
+            # medium game starting with user first
             print_gameboard()
             while game_loop:
                 while move_loop:
@@ -428,14 +487,12 @@ while menu_loop:
                     break
 
                 while move_loop:
-                    print(rows)
-                    print(columns)
-                    print(diags)
-                    play_move()
+                    print('Making move level "medium"')
                     if find_end(current_player):
                         print("end game")
+                        play_move()
 
-                    elif find_blocker():
+                    elif find_blocker(current_player):
                         print("find blocker")
                         play_move()
                     else:
@@ -517,6 +574,159 @@ while menu_loop:
                     print('Making move level "easy"')
                     generate_random_move()
                     play_move()
+                    if not move_loop:
+                        switch_player()
+                        move_loop = True
+                        break
+                if not game_loop:
+                    break
+        elif commands[1] == "medium" and commands[2] == "user":
+            # medium game starting with AI first
+            print_gameboard()
+            while game_loop:
+                while move_loop:
+                    print('Making move level "medium"')
+                    if find_end(current_player):
+                        print("end game")
+                        play_move()
+
+                    elif find_blocker(current_player):
+                        print("find blocker")
+                        play_move()
+                    else:
+                        print("random move")
+                        generate_random_move()
+                        play_move()
+
+                    if not move_loop:
+                        switch_player()
+                        move_loop = True
+                        break
+                if not game_loop:
+                    break
+
+                while move_loop:
+                    get_user_move()
+                    play_move()
+                    if not move_loop:
+                        switch_player()
+                        move_loop = True
+                        break
+                if not game_loop:
+                    break
+
+        elif commands[1] == "medium" and commands[2] == "medium":
+            # medium game with two medium AI's
+            print_gameboard()
+            while game_loop:
+                while move_loop:
+                    print('Making move level "medium"')
+                    if find_end(current_player):
+                        print("end game")
+                        play_move()
+
+                    elif find_blocker(current_player):
+                        print("find blocker")
+                        play_move()
+                    else:
+                        print("random move")
+                        generate_random_move()
+                        play_move()
+
+                    if not move_loop:
+                        switch_player()
+                        move_loop = True
+                        break
+                if not game_loop:
+                    break
+
+                while move_loop:
+                    print('Making move level "medium"')
+                    if find_end(current_player):
+                        print("end game")
+                        play_move()
+
+                    elif find_blocker(current_player):
+                        print("find blocker")
+                        play_move()
+                    else:
+                        print("random move")
+                        generate_random_move()
+                        play_move()
+
+                    if not move_loop:
+                        switch_player()
+                        move_loop = True
+                        break
+                if not game_loop:
+                    break
+
+
+        elif commands[1] == "medium" and commands[2] == "easy":
+            # game with medium first and easy AI's
+            print_gameboard()
+            while game_loop:
+                while move_loop:
+                    print('Making move level "medium"')
+                    if find_end(current_player):
+                        print("end game")
+                        play_move()
+
+                    elif find_blocker(current_player):
+                        print("find blocker")
+                        play_move()
+                    else:
+                        print("random move")
+                        generate_random_move()
+                        play_move()
+
+                    if not move_loop:
+                        switch_player()
+                        move_loop = True
+                        break
+                if not game_loop:
+                    break
+
+                while move_loop:
+                    print('Making move level "easy"')
+                    generate_random_move()
+                    play_move()
+                    if not move_loop:
+                        switch_player()
+                        move_loop = True
+                        break
+                if not game_loop:
+                    break
+
+        elif commands[1] == "easy" and commands[2] == "medium":
+            # game with medium first and easy AI's
+            print_gameboard()
+            while game_loop:
+                while move_loop:
+                    print('Making move level "easy"')
+                    generate_random_move()
+                    play_move()
+                    if not move_loop:
+                        switch_player()
+                        move_loop = True
+                        break
+                if not game_loop:
+                    break
+
+                while move_loop:
+                    print('Making move level "medium"')
+                    if find_end(current_player):
+                        print("end game")
+                        play_move()
+
+                    elif find_blocker(current_player):
+                        print("find blocker")
+                        play_move()
+                    else:
+                        print("random move")
+                        generate_random_move()
+                        play_move()
+
                     if not move_loop:
                         switch_player()
                         move_loop = True
