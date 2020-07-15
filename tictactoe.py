@@ -144,11 +144,13 @@ def check_game_state():
 
     return current_state
 
+
 def is_two_digits(some_text):
     if some_text.replace(" ", "").isdigit() and len(some_text.replace(" ", "")) == 2:
         return True
     else:
         return False
+
 
 def is_in_coords(some_text):
     if 1 <= int(some_text.replace(" ", "")[0]) <= 3 \
@@ -334,7 +336,6 @@ def find_end(player):
             coords = "1 3"
         elif diag == 1:
             coords = "1 1"
-
 
     if coords == "":
         return False
@@ -714,6 +715,7 @@ while menu_loop:
                     break
 
                 while move_loop:
+                    # medium AI move
                     print('Making move level "medium"')
                     if find_end(current_player):
                         print("end game")
