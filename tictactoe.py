@@ -436,6 +436,30 @@ def find_blocker(player):
         return True
 
 
+def make_user_move():
+    get_user_move()
+    play_move()
+
+
+def make_easy_move():
+    generate_random_move()
+    play_move()
+
+
+def make_medium_move():
+    if find_end(current_player):
+        print("end game")
+        play_move()
+
+    elif find_blocker(current_player):
+        print("find blocker")
+        play_move()
+    else:
+        print("random move")
+        generate_random_move()
+        play_move()
+
+
 while menu_loop:
     initial_setup()
     setup_game()
@@ -454,8 +478,7 @@ while menu_loop:
             print_gameboard()
             while game_loop:
                 while move_loop:
-                    get_user_move()
-                    play_move()
+                    make_user_move()
                     if not move_loop:
                         switch_player()
                         move_loop = True
@@ -465,8 +488,7 @@ while menu_loop:
 
                 while move_loop:
                     print('Making move level "easy"')
-                    generate_random_move()
-                    play_move()
+                    make_easy_move()
                     if not move_loop:
                         switch_player()
                         move_loop = True
@@ -478,8 +500,7 @@ while menu_loop:
             print_gameboard()
             while game_loop:
                 while move_loop:
-                    get_user_move()
-                    play_move()
+                    make_user_move()
                     if not move_loop:
                         switch_player()
                         move_loop = True
@@ -489,17 +510,7 @@ while menu_loop:
 
                 while move_loop:
                     print('Making move level "medium"')
-                    if find_end(current_player):
-                        print("end game")
-                        play_move()
-
-                    elif find_blocker(current_player):
-                        print("find blocker")
-                        play_move()
-                    else:
-                        print("random move")
-                        generate_random_move()
-                        play_move()
+                    make_medium_move()
 
                     if not move_loop:
                         switch_player()
@@ -513,8 +524,7 @@ while menu_loop:
             print_gameboard()
             while game_loop:
                 while move_loop:
-                    get_user_move()
-                    play_move()
+                    make_user_move()
                     if not move_loop:
                         switch_player()
                         break
@@ -523,8 +533,7 @@ while menu_loop:
                 move_loop = True
 
                 while move_loop:
-                    get_user_move()
-                    play_move()
+                    make_user_move()
                     if not move_loop:
                         switch_player()
                         break
@@ -538,8 +547,7 @@ while menu_loop:
             while game_loop:
                 while move_loop:
                     print('Making move level "easy"')
-                    generate_random_move()
-                    play_move()
+                    make_easy_move()
                     if not move_loop:
                         switch_player()
                         move_loop = True
@@ -548,8 +556,7 @@ while menu_loop:
                     break
 
                 while move_loop:
-                    get_user_move()
-                    play_move()
+                    make_user_move()
                     if not move_loop:
                         switch_player()
                         move_loop = True
@@ -562,8 +569,7 @@ while menu_loop:
             while game_loop:
                 while move_loop:
                     print('Making move level "easy"')
-                    generate_random_move()
-                    play_move()
+                    make_easy_move()
                     if not move_loop:
                         switch_player()
                         move_loop = True
@@ -573,8 +579,7 @@ while menu_loop:
 
                 while move_loop:
                     print('Making move level "easy"')
-                    generate_random_move()
-                    play_move()
+                    make_easy_move()
                     if not move_loop:
                         switch_player()
                         move_loop = True
@@ -587,17 +592,7 @@ while menu_loop:
             while game_loop:
                 while move_loop:
                     print('Making move level "medium"')
-                    if find_end(current_player):
-                        print("end game")
-                        play_move()
-
-                    elif find_blocker(current_player):
-                        print("find blocker")
-                        play_move()
-                    else:
-                        print("random move")
-                        generate_random_move()
-                        play_move()
+                    make_medium_move()
 
                     if not move_loop:
                         switch_player()
@@ -607,8 +602,7 @@ while menu_loop:
                     break
 
                 while move_loop:
-                    get_user_move()
-                    play_move()
+                    make_user_move()
                     if not move_loop:
                         switch_player()
                         move_loop = True
@@ -622,17 +616,7 @@ while menu_loop:
             while game_loop:
                 while move_loop:
                     print('Making move level "medium"')
-                    if find_end(current_player):
-                        print("end game")
-                        play_move()
-
-                    elif find_blocker(current_player):
-                        print("find blocker")
-                        play_move()
-                    else:
-                        print("random move")
-                        generate_random_move()
-                        play_move()
+                    make_medium_move()
 
                     if not move_loop:
                         switch_player()
@@ -643,17 +627,7 @@ while menu_loop:
 
                 while move_loop:
                     print('Making move level "medium"')
-                    if find_end(current_player):
-                        print("end game")
-                        play_move()
-
-                    elif find_blocker(current_player):
-                        print("find blocker")
-                        play_move()
-                    else:
-                        print("random move")
-                        generate_random_move()
-                        play_move()
+                    make_medium_move()
 
                     if not move_loop:
                         switch_player()
@@ -669,17 +643,7 @@ while menu_loop:
             while game_loop:
                 while move_loop:
                     print('Making move level "medium"')
-                    if find_end(current_player):
-                        print("end game")
-                        play_move()
-
-                    elif find_blocker(current_player):
-                        print("find blocker")
-                        play_move()
-                    else:
-                        print("random move")
-                        generate_random_move()
-                        play_move()
+                    make_medium_move()
 
                     if not move_loop:
                         switch_player()
@@ -690,8 +654,7 @@ while menu_loop:
 
                 while move_loop:
                     print('Making move level "easy"')
-                    generate_random_move()
-                    play_move()
+                    make_easy_move()
                     if not move_loop:
                         switch_player()
                         move_loop = True
@@ -705,8 +668,7 @@ while menu_loop:
             while game_loop:
                 while move_loop:
                     print('Making move level "easy"')
-                    generate_random_move()
-                    play_move()
+                    make_easy_move()
                     if not move_loop:
                         switch_player()
                         move_loop = True
@@ -717,17 +679,7 @@ while menu_loop:
                 while move_loop:
                     # medium AI move
                     print('Making move level "medium"')
-                    if find_end(current_player):
-                        print("end game")
-                        play_move()
-
-                    elif find_blocker(current_player):
-                        print("find blocker")
-                        play_move()
-                    else:
-                        print("random move")
-                        generate_random_move()
-                        play_move()
+                    make_medium_move()
 
                     if not move_loop:
                         switch_player()
