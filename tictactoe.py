@@ -5,8 +5,8 @@ rows = list()
 columns = []
 diags = []
 game_board = []
-x_winner = "XXX"
-o_winner = "OOO"
+x_winner = ["X", "X", "X"]
+o_winner = ["O", "O", "O"]
 x_wins = 0
 o_wins = 0
 x_s = 0
@@ -101,15 +101,15 @@ def count_winners():
     global x_s
     global o_s
 
-    x_wins = "".join(row_1).count(x_winner) + "".join(row_2).count(x_winner) \
-             + "".join(row_3).count(x_winner) + "".join(columns[0]).count(x_winner) \
-             + "".join(columns[1]).count(x_winner) + "".join(columns[2]).count(x_winner) \
-             + "".join(diags[0]).count(x_winner) + "".join(diags[1]).count(x_winner)
+    x_wins = row_1.count(x_winner) + row_2.count(x_winner) \
+        + row_3.count(x_winner) + columns[0].count(x_winner) \
+        + columns[1].count(x_winner) + columns[2].count(x_winner) \
+        + diags[0].count(x_winner) + diags[1].count(x_winner)
 
-    o_wins = "".join(row_1).count(o_winner) + "".join(row_2).count(o_winner) \
-             + "".join(row_3).count(o_winner) + "".join(columns[0]).count(o_winner) \
-             + "".join(columns[1]).count(o_winner) + "".join(columns[2]).count(o_winner) \
-             + "".join(diags[0]).count(o_winner) + "".join(diags[1]).count(o_winner)
+    o_wins = row_1.count(o_winner) + row_2.count(o_winner) \
+        + row_3.count(o_winner) + columns[0].count(o_winner) \
+        + columns[1].count(o_winner) + columns[2].count(o_winner) \
+        + diags[0].count(o_winner) + diags[1].count(o_winner)
 
     spaces = row_1.count("_") + row_2.count("_") + row_3.count("_")
     x_s = row_1.count("X") + row_2.count("X") + row_3.count("X")
