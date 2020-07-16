@@ -93,6 +93,9 @@ def count_winners():
     global row_1
     global row_2
     global row_3
+    global rows
+    global columns
+    global diags
     global x_winner
     global o_winner
     global x_wins
@@ -101,15 +104,25 @@ def count_winners():
     global x_s
     global o_s
 
-    x_wins = row_1.count(x_winner) + row_2.count(x_winner) \
-        + row_3.count(x_winner) + columns[0].count(x_winner) \
-        + columns[1].count(x_winner) + columns[2].count(x_winner) \
-        + diags[0].count(x_winner) + diags[1].count(x_winner)
+    for row in rows:
+        if row == x_winner:
+            x_wins += 1
+    for col in columns:
+        if col == x_winner:
+            x_wins += 1
+    for di in diags:
+        if di == x_winner:
+            x_wins += 1
 
-    o_wins = row_1.count(o_winner) + row_2.count(o_winner) \
-        + row_3.count(o_winner) + columns[0].count(o_winner) \
-        + columns[1].count(o_winner) + columns[2].count(o_winner) \
-        + diags[0].count(o_winner) + diags[1].count(o_winner)
+    for row in rows:
+        if row == o_winner:
+            o_wins += 1
+    for col in columns:
+        if col == o_winner:
+            o_wins += 1
+    for di in diags:
+        if di == o_winner:
+            o_wins += 1
 
     spaces = row_1.count("_") + row_2.count("_") + row_3.count("_")
     x_s = row_1.count("X") + row_2.count("X") + row_3.count("X")
