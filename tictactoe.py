@@ -1,5 +1,6 @@
 # write your code here
 import random
+import math
 
 rows = list()
 columns = []
@@ -25,10 +26,37 @@ move_loop = True
 new_x = 0
 new_y = 0
 text_in = ""
+empty_cells = []
+COMP = 1
+HUMAN = -1
 
 
 num_matrix = [[0, 0], [0, 1], [0, 2], [1, 0], [1, 1], [1, 2], [2, 0], [2, 1], [2, 2]]
 
+matrix_dict = {
+    (0, 0): [1, 3],
+    (0, 1): [2, 3],
+    (0, 2): [3, 3],
+    (1, 0): [1, 2],
+    (1, 1): [2, 2],
+    (1, 2): [3, 2],
+    (2, 0): [1, 1],
+    (2, 1): [2, 1],
+    (2, 2): [3, 1]
+}
+
+
+mapped_dict = {
+    (1, 3): [0, 0],
+    (2, 3): [0, 1],
+    (3, 3): [0, 2],
+    (1, 2): [1, 0],
+    (2, 2): [1, 1],
+    (3, 2): [1, 2],
+    (1, 1): [2, 0],
+    (2, 1): [2, 1],
+    (3, 1): [2, 2]
+}
 
 def create_init_state():
 
@@ -103,6 +131,7 @@ def count_winners():
     global spaces
     global x_s
     global o_s
+    global empty_cells
 
     for row in rows:
         if row == x_winner:
@@ -127,6 +156,20 @@ def count_winners():
     spaces = row_1.count("_") + row_2.count("_") + row_3.count("_")
     x_s = row_1.count("X") + row_2.count("X") + row_3.count("X")
     o_s = row_1.count("O") + row_2.count("O") + row_3.count("O")
+    make_empty_cells()
+
+
+def make_empty_cells():
+    global empty_cells
+    global matrix_dict
+    print("making empty cells")
+    empty_cells = []
+    for idx, r in enumerate(rows):
+        for idr, j in enumerate(r):
+            if j == "_":
+                cell = (idx, idr)
+                mapped_cell = matrix_dict[cell]
+                empty_cells.append(mapped_cell)
 
 
 def check_game_state():
@@ -473,6 +516,82 @@ def make_medium_move():
         play_move()
 
 
+def minimax(board, depth, player, type):
+    score = []
+    if type == COMP:
+        best = [-1, -1, -math.inf]
+    else:
+        best = [-1, -1, math.inf]
+
+    if player == "X":
+        opponent = "O"
+    else:
+        opponent = "X"
+
+    check_game_state()
+    make_empty_cells()
+
+    if depth == 0 or current_state in ("X wins", "O wins", "Draw"):
+        print("Exiting")
+        print("depth ", depth)
+        # print(current_state)
+        # score = evaluate(state)
+        if type == COMP and player == "X" and current_state == "X wins":
+            return [-1, -1, 1]
+        elif type == COMP and player == "O" and current_state == "O wins":
+            print("Returning O")
+            return [-1, -1, 1]
+        elif type == HUMAN and player == "X" and current_state == "X wins":
+            return [-1, -1, -1]
+        elif type == HUMAN and player == "O" and current_state == "O wins":
+            return [-1, -1, -1]
+        elif current_state == "Draw":
+            print("exit", current_state)
+            return [-1, -1, 0]
+        else:
+            print("fuck")
+            return [-1, -1, 0]
+
+    for cell in empty_cells:
+        print("Recursion", depth)
+        cello = mapped_dict[(cell[0], cell[1])]
+        x, y = cello[0], cello[1]
+        rows[x][y] = player
+        score = minimax(rows, len(empty_cells) - 1, opponent, -type)
+        rows[x][y] = "_"
+        score[0], score[1] = x, y
+        print("rec score", score)
+
+    if type == COMP:
+        if score[2] > best[2]:
+            best = score
+    else:
+        if score[2] < best[2]:
+            best = score
+
+    return best
+
+
+def make_hard_move():
+    global new_x
+    global new_y
+    global empty_cells
+
+    make_empty_cells()
+
+    if len(empty_cells) == 0:
+        return
+
+    if len(empty_cells) == 9:
+        generate_random_move()
+        play_move()
+    else:
+        print("minimax")
+        move = minimax(rows, len(empty_cells), current_player, COMP)
+        new_x, new_y = move[0], move[1]
+        play_move()
+
+
 while menu_loop:
     initial_setup()
     setup_game()
@@ -524,6 +643,29 @@ while menu_loop:
                 while move_loop:
                     print('Making move level "medium"')
                     make_medium_move()
+
+                    if not move_loop:
+                        switch_player()
+                        move_loop = True
+                        break
+                if not game_loop:
+                    break
+        elif commands[1] == "user" and commands[2] == "hard":
+            # medium game starting with user first
+            print_gameboard()
+            while game_loop:
+                while move_loop:
+                    make_user_move()
+                    if not move_loop:
+                        switch_player()
+                        move_loop = True
+                        break
+                if not game_loop:
+                    break
+
+                while move_loop:
+                    print('Making move level "hard"')
+                    make_hard_move()
 
                     if not move_loop:
                         switch_player()
@@ -648,7 +790,6 @@ while menu_loop:
                         break
                 if not game_loop:
                     break
-
 
         elif commands[1] == "medium" and commands[2] == "easy":
             # game with medium first and easy AI's
