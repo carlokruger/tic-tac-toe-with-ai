@@ -592,6 +592,17 @@ def make_hard_move():
         play_move()
 
 
+def choose_move(text):
+    if text == "user":
+        make_user_move()
+    elif text == "easy":
+        make_easy_move()
+    elif text == "medium":
+        make_medium_move()
+    elif text == "hard":
+        make_hard_move()
+
+
 while menu_loop:
     initial_setup()
     setup_game()
@@ -605,239 +616,22 @@ while menu_loop:
     elif commands[0] != "start" and commands[0] != "exit":
         print("Bad parameters")
     elif commands[0] == "start" and len(commands) == 3:
-        if commands[1] == "user" and commands[2] == "easy":
-            # simple game starting with user first
-            print_gameboard()
-            while game_loop:
-                while move_loop:
-                    make_user_move()
-                    if not move_loop:
-                        switch_player()
-                        move_loop = True
-                        break
-                if not game_loop:
+        print_gameboard()
+        while game_loop:
+            while move_loop:
+                choose_move(commands[1])
+                if not move_loop:
+                    switch_player()
+                    move_loop = True
                     break
+            if not game_loop:
+                break
 
-                while move_loop:
-                    print('Making move level "easy"')
-                    make_easy_move()
-                    if not move_loop:
-                        switch_player()
-                        move_loop = True
-                        break
-                if not game_loop:
+            while move_loop:
+                choose_move(commands[2])
+                if not move_loop:
+                    switch_player()
+                    move_loop = True
                     break
-        elif commands[1] == "user" and commands[2] == "medium":
-            # medium game starting with user first
-            print_gameboard()
-            while game_loop:
-                while move_loop:
-                    make_user_move()
-                    if not move_loop:
-                        switch_player()
-                        move_loop = True
-                        break
-                if not game_loop:
-                    break
-
-                while move_loop:
-                    print('Making move level "medium"')
-                    make_medium_move()
-
-                    if not move_loop:
-                        switch_player()
-                        move_loop = True
-                        break
-                if not game_loop:
-                    break
-        elif commands[1] == "user" and commands[2] == "hard":
-            # medium game starting with user first
-            print_gameboard()
-            while game_loop:
-                while move_loop:
-                    make_user_move()
-                    if not move_loop:
-                        switch_player()
-                        move_loop = True
-                        break
-                if not game_loop:
-                    break
-
-                while move_loop:
-                    print('Making move level "hard"')
-                    make_hard_move()
-
-                    if not move_loop:
-                        switch_player()
-                        move_loop = True
-                        break
-                if not game_loop:
-                    break
-
-        elif commands[1] == "user" and commands[2] == "user":
-            # simple game with two users
-            print_gameboard()
-            while game_loop:
-                while move_loop:
-                    make_user_move()
-                    if not move_loop:
-                        switch_player()
-                        break
-                if not game_loop:
-                    break
-                move_loop = True
-
-                while move_loop:
-                    make_user_move()
-                    if not move_loop:
-                        switch_player()
-                        break
-                move_loop = True
-                if not game_loop:
-                    break
-
-        elif commands[1] == "easy" and commands[2] == "user":
-            # simple game starting with AI first
-            print_gameboard()
-            while game_loop:
-                while move_loop:
-                    print('Making move level "easy"')
-                    make_easy_move()
-                    if not move_loop:
-                        switch_player()
-                        move_loop = True
-                        break
-                if not game_loop:
-                    break
-
-                while move_loop:
-                    make_user_move()
-                    if not move_loop:
-                        switch_player()
-                        move_loop = True
-                        break
-                if not game_loop:
-                    break
-        elif commands[1] == "easy" and commands[2] == "easy":
-            # easy game with two AI's
-            print_gameboard()
-            while game_loop:
-                while move_loop:
-                    print('Making move level "easy"')
-                    make_easy_move()
-                    if not move_loop:
-                        switch_player()
-                        move_loop = True
-                        break
-                if not game_loop:
-                    break
-
-                while move_loop:
-                    print('Making move level "easy"')
-                    make_easy_move()
-                    if not move_loop:
-                        switch_player()
-                        move_loop = True
-                        break
-                if not game_loop:
-                    break
-        elif commands[1] == "medium" and commands[2] == "user":
-            # medium game starting with AI first
-            print_gameboard()
-            while game_loop:
-                while move_loop:
-                    print('Making move level "medium"')
-                    make_medium_move()
-
-                    if not move_loop:
-                        switch_player()
-                        move_loop = True
-                        break
-                if not game_loop:
-                    break
-
-                while move_loop:
-                    make_user_move()
-                    if not move_loop:
-                        switch_player()
-                        move_loop = True
-                        break
-                if not game_loop:
-                    break
-
-        elif commands[1] == "medium" and commands[2] == "medium":
-            # medium game with two medium AI's
-            print_gameboard()
-            while game_loop:
-                while move_loop:
-                    print('Making move level "medium"')
-                    make_medium_move()
-
-                    if not move_loop:
-                        switch_player()
-                        move_loop = True
-                        break
-                if not game_loop:
-                    break
-
-                while move_loop:
-                    print('Making move level "medium"')
-                    make_medium_move()
-
-                    if not move_loop:
-                        switch_player()
-                        move_loop = True
-                        break
-                if not game_loop:
-                    break
-
-        elif commands[1] == "medium" and commands[2] == "easy":
-            # game with medium first and easy AI's
-            print_gameboard()
-            while game_loop:
-                while move_loop:
-                    print('Making move level "medium"')
-                    make_medium_move()
-
-                    if not move_loop:
-                        switch_player()
-                        move_loop = True
-                        break
-                if not game_loop:
-                    break
-
-                while move_loop:
-                    print('Making move level "easy"')
-                    make_easy_move()
-                    if not move_loop:
-                        switch_player()
-                        move_loop = True
-                        break
-                if not game_loop:
-                    break
-
-        elif commands[1] == "easy" and commands[2] == "medium":
-            # game with medium first and easy AI's
-            print_gameboard()
-            while game_loop:
-                while move_loop:
-                    print('Making move level "easy"')
-                    make_easy_move()
-                    if not move_loop:
-                        switch_player()
-                        move_loop = True
-                        break
-                if not game_loop:
-                    break
-
-                while move_loop:
-                    # medium AI move
-                    print('Making move level "medium"')
-                    make_medium_move()
-
-                    if not move_loop:
-                        switch_player()
-                        move_loop = True
-                        break
-                if not game_loop:
-                    break
+            if not game_loop:
+                break
