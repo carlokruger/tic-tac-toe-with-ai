@@ -29,6 +29,7 @@ text_in = ""
 empty_cells = []
 COMP = 1
 HUMAN = -1
+score = []
 
 
 num_matrix = [[0, 0], [0, 1], [0, 2], [1, 0], [1, 1], [1, 2], [2, 0], [2, 1], [2, 2]]
@@ -133,6 +134,9 @@ def count_winners():
     global o_s
     global empty_cells
 
+    x_wins = 0
+    o_wins = 0
+
     for row in rows:
         if row == x_winner:
             x_wins += 1
@@ -162,7 +166,7 @@ def count_winners():
 def make_empty_cells():
     global empty_cells
     global matrix_dict
-    print("making empty cells")
+    # print("making empty cells")
     empty_cells = []
     for idx, r in enumerate(rows):
         for idr, j in enumerate(r):
@@ -294,8 +298,6 @@ def play_move():
         setup_game()
         print_gameboard()
         count_winners()
-        end_game()
-        move_loop = False
 
 
 def generate_random_move():
@@ -504,20 +506,24 @@ def make_easy_move():
 
 def make_medium_move():
     if find_end(current_player):
-        print("end game")
+        # print("end game")
         play_move()
 
     elif find_blocker(current_player):
-        print("find blocker")
+        # print("find blocker")
         play_move()
     else:
-        print("random move")
+        # print("random move")
         generate_random_move()
         play_move()
 
 
 def minimax(board, depth, player, type):
-    score = []
+    global row_1
+    global row_2
+    global row_3
+    global score
+    # score = []
     if type == COMP:
         best = [-1, -1, -math.inf]
     else:
@@ -528,39 +534,49 @@ def minimax(board, depth, player, type):
     else:
         opponent = "X"
 
-    check_game_state()
-    make_empty_cells()
+    # count_winners()
+    # check_game_state()
 
     if depth == 0 or current_state in ("X wins", "O wins", "Draw"):
-        print("Exiting")
-        print("depth ", depth)
+        # print("Exiting")
+        # print("depth ", depth)
         # print(current_state)
         # score = evaluate(state)
         if type == COMP and player == "X" and current_state == "X wins":
             return [-1, -1, 1]
         elif type == COMP and player == "O" and current_state == "O wins":
-            print("Returning O")
+            # print("Returning O")
             return [-1, -1, 1]
         elif type == HUMAN and player == "X" and current_state == "X wins":
             return [-1, -1, -1]
         elif type == HUMAN and player == "O" and current_state == "O wins":
             return [-1, -1, -1]
         elif current_state == "Draw":
-            print("exit", current_state)
-            return [-1, -1, 0]
-        else:
-            print("fuck")
+            # print("exit", current_state)
             return [-1, -1, 0]
 
     for cell in empty_cells:
-        print("Recursion", depth)
+        # print("Recursion", depth)
         cello = mapped_dict[(cell[0], cell[1])]
         x, y = cello[0], cello[1]
-        rows[x][y] = player
+        board[x][y] = player
+        row_1 = rows[0]
+        row_2 = rows[1]
+        row_3 = rows[2]
+        setup_game()
+        count_winners()
+        check_game_state()
         score = minimax(rows, len(empty_cells) - 1, opponent, -type)
-        rows[x][y] = "_"
+        board[x][y] = "_"
+        row_1 = rows[0]
+        row_2 = rows[1]
+        row_3 = rows[2]
+        setup_game()
+        count_winners()
+        check_game_state()
+
         score[0], score[1] = x, y
-        print("rec score", score)
+        # print("rec score", score)
 
     if type == COMP:
         if score[2] > best[2]:
@@ -576,8 +592,9 @@ def make_hard_move():
     global new_x
     global new_y
     global empty_cells
+    global current_state
 
-    make_empty_cells()
+    # count_winners()
 
     if len(empty_cells) == 0:
         return
@@ -586,9 +603,15 @@ def make_hard_move():
         generate_random_move()
         play_move()
     else:
-        print("minimax")
+        # print("minimax")
         move = minimax(rows, len(empty_cells), current_player, COMP)
         new_x, new_y = move[0], move[1]
+        # print("playing AI")
+        current_state = ""
+        # count_winners()
+        # print("Os", o_wins)
+        # print("state", current_state)
+        # check_game_state()
         play_move()
 
 
@@ -620,6 +643,8 @@ while menu_loop:
         while game_loop:
             while move_loop:
                 choose_move(commands[1])
+                end_game()
+                move_loop = False
                 if not move_loop:
                     switch_player()
                     move_loop = True
@@ -629,6 +654,10 @@ while menu_loop:
 
             while move_loop:
                 choose_move(commands[2])
+                # print("ending game")
+                # print_gameboard()
+                end_game()
+                move_loop = False
                 if not move_loop:
                     switch_player()
                     move_loop = True
